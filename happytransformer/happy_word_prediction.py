@@ -40,7 +40,7 @@ class HappyWordPrediction(HappyTransformer):
 
         self._trainer = WPTrainer(self.model, model_type, self.tokenizer, self._device, self.logger)
 
-    def predict_mask(self, text: str, targets: Optional[List[str]] = None, top_k: int = 1) -> List[WordPredictionResult]:
+    def predict_mask(self, text: str, targets: Optional[List[str]] = None, prefix: str = None, top_k: int = 1) -> List[WordPredictionResult]:
         """
         Predict [MASK] tokens in a string.
         targets limit possible guesses if supplied.
@@ -53,7 +53,9 @@ class HappyWordPrediction(HappyTransformer):
         text_for_pipeline = self.adaptor.preprocess_mask_text(text)
         answers = self._pipeline(
             text_for_pipeline, 
-            targets=targets, top_k=top_k
+            targets=targets,
+            prefix=prefix,
+            top_k=top_k
         )
 
         fix_token = self.adaptor.postprocess_mask_prediction_token
